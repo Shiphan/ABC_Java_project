@@ -29,11 +29,11 @@ public class AnimatedGame {
     private int monsterUltimateInterval = 20000; // 毫秒
 
     // 人像圖案
-        private ImageIcon heroPortrait, monsterPortrait,GGPortrait ,DEFPortrait ,AttackPortrait,GGmonsterPortrait;
+    private ImageIcon heroPortrait, monsterPortrait,GGPortrait ,DEFPortrait ,AttackPortrait,GGmonsterPortrait;
 
-        public AnimatedGame() {
-            showStartMenu();
-        }
+    public AnimatedGame() {
+        showStartMenu();
+    }
 
     // 遊戲視窗
     private JFrame frame;
@@ -217,9 +217,9 @@ public class AnimatedGame {
         if (isDefenseActive) {
             if (heroHealth <= 0) {
                 gameEnd("怪物勝利！");
-            }else{
-            JOptionPane.showMessageDialog(frame, "防禦成功！主角免疫本次傷害！");
-            isDefenseActive = false;
+            } else {
+                JOptionPane.showMessageDialog(frame, "防禦成功！主角免疫本次傷害！");
+                isDefenseActive = false;
             }
         } else if (heroHealth > 0 && !isGameOver) {
             moveMonster(-80); // 向前移動
