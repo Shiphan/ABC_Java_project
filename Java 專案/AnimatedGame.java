@@ -91,12 +91,12 @@ public class AnimatedGame {
         
 
         // 載入人像
-        heroPortrait = new ImageIcon("ABC_and_Shiphan_git\\Java 專案\\picture\\hero.png");
-        monsterPortrait = new ImageIcon("ABC_and_Shiphan_git\\Java 專案\\picture\\monster.png"); 
-        GGPortrait = new ImageIcon("ABC_and_Shiphan_git\\Java 專案\\picture\\GGgirl.png"); 
-        DEFPortrait = new ImageIcon("ABC_and_Shiphan_git\\Java 專案\\picture\\DEF.png"); 
-        AttackPortrait = new ImageIcon("ABC_and_Shiphan_git\\Java 專案\\picture\\attack.png"); 
-        GGmonsterPortrait = new ImageIcon("ABC_and_Shiphan_git\\Java 專案\\picture\\GGmonster.png"); 
+        heroPortrait = new ImageIcon("Java 專案\\picture\\hero.png");
+        monsterPortrait = new ImageIcon("Java 專案\\picture\\monster.png"); 
+        GGPortrait = new ImageIcon("Java 專案\\picture\\GGgirl.png"); 
+        DEFPortrait = new ImageIcon("Java 專案\\picture\\DEF.png"); 
+        AttackPortrait = new ImageIcon("Java 專案\\picture\\attack.png"); 
+        GGmonsterPortrait = new ImageIcon("Java 專案\\picture\\GGmonster.png"); 
 
         // 主角人像
         heroLabel = new JLabel(heroPortrait);
@@ -300,9 +300,9 @@ public class AnimatedGame {
         
         // 更新怪物圖片
         if (level == 2) {
-            monsterLabel.setIcon(new ImageIcon("ABC_and_Shiphan_git\\Java 專案\\picture\\monster_level2.png"));
+            monsterLabel.setIcon(new ImageIcon("Java 專案\\picture\\monster_level2.png"));
         } else if (level == 3) {
-            monsterLabel.setIcon(new ImageIcon("ABC_and_Shiphan_git\\Java 專案\\picture\\monster_level3.png"));
+            monsterLabel.setIcon(new ImageIcon("Java 專案\\picture\\monster_level3.png"));
         }
     
         // 重置怪物進度條和狀態
