@@ -189,6 +189,7 @@ public class AnimatedGame {
             // 動畫效果：更換圖片與移動
             SwingUtilities.invokeLater(() -> {
                 heroLabel.setIcon(AttackPortrait); // 更換為攻擊圖片
+                
                 moveHero(150); // 向前移動
             });
     
