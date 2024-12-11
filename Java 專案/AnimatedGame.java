@@ -27,6 +27,9 @@ public class AnimatedGame {
     private int monsterUltimatePower = 35;
     private int monsterAttackSpeed = 5000; // 毫秒
     private int monsterUltimateInterval = 20000; // 毫秒
+    
+    // 特效圖案
+    private ImageIcon heroAttackPortrait;
 
     // 人像圖案
     private ImageIcon heroPortrait, monsterPortrait,GGPortrait ,DEFPortrait ,AttackPortrait,GGmonsterPortrait;
@@ -90,13 +93,14 @@ public class AnimatedGame {
 
         
 
-        // 載入人像
+        // 載入圖片
         heroPortrait = new ImageIcon("Java 專案\\picture\\hero.png");
         monsterPortrait = new ImageIcon("Java 專案\\picture\\monster.png"); 
         GGPortrait = new ImageIcon("Java 專案\\picture\\GGgirl.png"); 
         DEFPortrait = new ImageIcon("Java 專案\\picture\\DEF.png"); 
         AttackPortrait = new ImageIcon("Java 專案\\picture\\attack.png"); 
         GGmonsterPortrait = new ImageIcon("Java 專案\\picture\\GGmonster.png"); 
+        heroAttackPortrait = new ImageIcon("Java 專案\\picture\\Heroattack.gif"); 
 
         // 主角人像
         heroLabel = new JLabel(heroPortrait);
