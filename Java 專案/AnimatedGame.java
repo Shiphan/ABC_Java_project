@@ -40,7 +40,7 @@ public class AnimatedGame {
 
     // 遊戲視窗
     private JFrame frame;
-    private JLabel heroLabel, monsterLabel, heroStatsLabel, monsterStatsLabel, manaLabel, ultimateWarningLabel;
+    private JLabel heroLabel, monsterLabel, heroStatsLabel, monsterStatsLabel, manaLabel, ultimateWarningLabel,effectLabel;
     private JButton[] magicCards = new JButton[4];
     private Timer heroAttackTimer, monsterAttackTimer, manaRegenTimer, monsterUltimateTimer;
     private JProgressBar heroHealthBar, monsterHealthBar;
@@ -109,7 +109,14 @@ public class AnimatedGame {
         // 怪物人像
         monsterLabel = new JLabel(monsterPortrait);
         monsterLabel.setBounds(450, 100, 300, 350);
+        
+        // 特效人像
+        effectLabel = new JLabel(heroAttackPortrait);
+        effectLabel.setBounds(30, 20, 500, 500);
 
+        // 添加與可見性
+        effectLabel.setVisible(false);
+        frame.add(effectLabel);
         frame.add(heroLabel);
         frame.add(monsterLabel);
 
@@ -189,12 +196,13 @@ public class AnimatedGame {
             // 動畫效果：更換圖片與移動
             SwingUtilities.invokeLater(() -> {
                 heroLabel.setIcon(AttackPortrait); // 更換為攻擊圖片
-                
+                effectLabel.setVisible(true);
                 moveHero(150); // 向前移動
             });
     
             // 短暫延遲後恢復圖片與位置
             Timer resetTimer = new Timer(500, e -> {
+                effectLabel.setVisible(false);
                 heroLabel.setIcon(heroPortrait); // 恢復靜止圖片
                 moveHero(-150); // 移回原位
                 // 扣除怪物血量
