@@ -30,7 +30,7 @@ public class AnimatedGame {
     private int monsterUltimateInterval = 20000; // 毫秒
     
     // 特效圖案
-    private ImageIcon heroAttackPortrait;
+    private ImageIcon heroAttackPortrait,succesDEFPortrait;
 
     // 人像圖案
     private ImageIcon heroPortrait, monsterPortrait,GGPortrait ,DEFPortrait ,AttackPortrait,GGmonsterPortrait;
@@ -41,7 +41,7 @@ public class AnimatedGame {
 
     // 遊戲視窗
     private JFrame frame;
-    private JLabel heroLabel, monsterLabel, heroStatsLabel, monsterStatsLabel, manaLabel, ultimateWarningLabel,effectLabel;
+    private JLabel heroLabel, monsterLabel, heroStatsLabel, monsterStatsLabel, manaLabel, ultimateWarningLabel,effectLabel,wordLabel;
     private JButton[] magicCards = new JButton[4];
     private Timer heroAttackTimer, monsterAttackTimer, manaRegenTimer, monsterUltimateTimer;
     private JProgressBar heroHealthBar, monsterHealthBar;
@@ -102,6 +102,7 @@ public class AnimatedGame {
         AttackPortrait = new ImageIcon("Java 專案\\picture\\attack.png"); 
         GGmonsterPortrait = new ImageIcon("Java 專案\\picture\\GGmonster.png"); 
         heroAttackPortrait = new ImageIcon("Java 專案\\picture\\Heroattack.gif"); 
+        succesDEFPortrait = new ImageIcon("Java 專案\\picture\\SuccesDEF.png"); 
 
         // 主角人像
         heroLabel = new JLabel(heroPortrait);
@@ -112,11 +113,14 @@ public class AnimatedGame {
         monsterLabel.setBounds(450, 100, 300, 350);
         
         // 特效人像
+        wordLabel = new JLabel(succesDEFPortrait);
+        wordLabel.setBounds(200, 100, 300, 300);
         effectLabel = new JLabel(heroAttackPortrait);
         effectLabel.setBounds(30, 20, 500, 500);
 
         // 添加與可見性
         effectLabel.setVisible(false);
+        wordLabel.setVisible(false);
         frame.add(effectLabel);
         frame.add(heroLabel);
         frame.add(monsterLabel);
