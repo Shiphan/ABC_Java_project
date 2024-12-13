@@ -3,6 +3,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Random;
 import javax.swing.*;
+ 
 
 
 public class AnimatedGame {
@@ -14,7 +15,7 @@ public class AnimatedGame {
     private final int maxLevel = 3;
 
     // 主角數值
-    private int heroAttackPower = 30;
+    private int heroAttackPower = 3;
     private int heroHealth = 100;
     private int heroMaxHealth = 100;
     private int heroAttackSpeed = 3000; // 毫秒
@@ -138,7 +139,7 @@ public class AnimatedGame {
         ultimateWarningLabel = new JLabel("", SwingConstants.CENTER);
         ultimateWarningLabel.setFont(new Font("Arial", Font.BOLD, 24));
         ultimateWarningLabel.setForeground(Color.RED);
-        ultimateWarningLabel.setBounds(200, 100, 400, 50);
+        ultimateWarningLabel.setBounds(200, 110, 400, 50);
         frame.add(ultimateWarningLabel);
 
         // 魔法卡區域
@@ -231,8 +232,11 @@ public class AnimatedGame {
             if (heroHealth <= 0) {
                 gameEnd("怪物勝利！");
             } else {
+                moveMonster(-80); // 向前移動
                 JOptionPane.showMessageDialog(frame, "防禦成功！主角免疫本次傷害！");
                 isDefenseActive = false;
+                moveMonster(80); // 移回原位
+                heroAttackTimer.start();
             }
         } else if (heroHealth > 0 && !isGameOver) {
             moveMonster(-80); // 向前移動
@@ -387,6 +391,7 @@ public class AnimatedGame {
                 } else if (card.contains("攻擊力 +1")) {
                     heroAttackPower += 1;
                 } else if (card.contains("防禦")) {
+                    if (heroAttackTimer != null) heroAttackTimer.stop();
                     isDefenseActive = true;
                     SwingUtilities.invokeLater(() -> {
                         heroLabel.setIcon(DEFPortrait);
