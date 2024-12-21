@@ -15,7 +15,7 @@ public class AnimatedGame {
     private final int maxLevel = 3;
 
     // 主角數值
-    private int heroAttackPower = 3;
+    private int heroAttackPower = 10;
     private int heroHealth = 100;
     private int heroMaxHealth = 100;
     private int heroAttackSpeed = 3000; // 毫秒
@@ -198,28 +198,34 @@ public class AnimatedGame {
     // 主角攻擊怪物
     private void attackMonster() {
         if (monsterHealth > 0 && !isGameOver) {
-            // 動畫效果：更換圖片與移動
             SwingUtilities.invokeLater(() -> {
-                heroLabel.setIcon(AttackPortrait); // 更換為攻擊圖片
+                heroLabel.setIcon(AttackPortrait);
                 effectLabel.setVisible(true);
-                moveHero(150); // 向前移動
+                moveHero(150);
             });
     
-            // 短暫延遲後恢復圖片與位置
             Timer resetTimer = new Timer(500, e -> {
                 effectLabel.setVisible(false);
-                heroLabel.setIcon(heroPortrait); // 恢復靜止圖片
-                moveHero(-150); // 移回原位
-                // 扣除怪物血量
-                monsterHealth -= heroAttackPower;
+                heroLabel.setIcon(heroPortrait);
+                moveHero(-150);
+    
+                int actualDamage = heroAttackPower;
+    
+                if (criticalHitActive && random.nextDouble() < 0.5) {
+                    actualDamage *= 1.5; // 爆擊額外傷害
+                    JOptionPane.showMessageDialog(frame, "爆擊！造成額外傷害！");
+                }
+    
+                monsterHealth -= actualDamage;
                 updateLabels();
+    
                 if (monsterHealth <= 0) {
                     SwingUtilities.invokeLater(() -> {
-                    monsterLabel.setIcon(GGmonsterPortrait); 
-                    moveMonster(30); // 向前移動
+                        monsterLabel.setIcon(GGmonsterPortrait);
+                        moveMonster(30);
                     });
                     if (level < maxLevel) {
-                        nextLevel();
+                        nextLevelWithPowerUp();
                     } else {
                         gameEnd("恭喜！你通關了所有關卡！");
                     }
@@ -297,43 +303,38 @@ public class AnimatedGame {
         }
     }
    
-    private void nextLevel() {
-        if (level >= maxLevel) {
-            gameEnd("恭喜！你通關了所有關卡！");
-            return;
-        }
-    
-        // 更新關卡相關數據
-        level++;
-        monsterHealth = 50 + level * 10; // 每關怪物血量增加
-        monsterAttackPower += 2; // 每關攻擊力增加
-        monsterAttackSpeed = Math.max(2000, monsterAttackSpeed - 200); // 攻擊速度加快
-        monsterUltimatePower += 5; // 大招傷害增加
-    
-        // 停止計時器，等待玩家按確定後啟動下一關
-        if (heroAttackTimer != null) heroAttackTimer.stop();
-        if (monsterAttackTimer != null) monsterAttackTimer.stop();
-        if (monsterUltimateTimer != null) monsterUltimateTimer.stop();
-        if (manaRegenTimer != null) manaRegenTimer.stop();
-    
-        // 顯示訊息，等待按下確認後繼續
-        JOptionPane.showMessageDialog(frame, "恭喜！進入第 " + level + " 關！");
-        
-        // 更新怪物圖片
-        if (level == 2) {
-            monsterLabel.setIcon(new ImageIcon("Java 專案\\picture\\monster_level2.png"));
-        } else if (level == 3) {
-            monsterLabel.setIcon(new ImageIcon("Java 專案\\picture\\monster_level3.png"));
-        }
-    
-        // 重置怪物進度條和狀態
-        monsterHealthBar.setMaximum(monsterHealth);
-        monsterHealthBar.setValue(monsterHealth);
-    
-        // 重新啟動計時器
-        startTimers();
-        updateLabels();
+    private void nextLevelWithPowerUp() {
+    if (level >= maxLevel) {
+        gameEnd("恭喜！你通關了所有關卡！");
+        return;
     }
+
+    level++;
+    monsterHealth = 50 + level * 10;
+    monsterAttackPower += 2;
+    monsterAttackSpeed = Math.max(2000, monsterAttackSpeed - 200);
+    monsterUltimatePower += 5;
+
+    if (heroAttackTimer != null) heroAttackTimer.stop();
+    if (monsterAttackTimer != null) monsterAttackTimer.stop();
+    if (monsterUltimateTimer != null) monsterUltimateTimer.stop();
+    if (manaRegenTimer != null) manaRegenTimer.stop();
+
+    JOptionPane.showMessageDialog(frame, "恭喜！進入第 " + level + " 關！");
+
+    if (level == 2) {
+        monsterLabel.setIcon(new ImageIcon("Java 專案\\picture\\monster_level2.png"));
+    } else if (level == 3) {
+        monsterLabel.setIcon(new ImageIcon("Java 專案\\picture\\monster_level3.png"));
+    }
+
+    monsterHealthBar.setMaximum(monsterHealth);
+    monsterHealthBar.setValue(monsterHealth);
+
+    showPowerUpMenu();
+    startTimers();
+    updateLabels();
+}
     
     private void updateHealthBarColors() {
         // 主角血量進度條顏色
@@ -371,6 +372,81 @@ public class AnimatedGame {
         JOptionPane.showMessageDialog(frame, message);
         System.exit(1);
     }
+    private final String[] powerUps = {
+        "血量的10%加到攻擊力",
+        "吸血10%",
+        "攻擊有機會使怪物中毒 (每秒少2%)",
+        "增加50%爆擊機率"
+    };
+    
+    private boolean poisonActive = false; // 毒傷效果開關
+    private boolean criticalHitActive = false; // 爆擊效果開關
+    
+    // 增加中毒與爆擊觸發計時器
+    private Timer poisonTimer;
+    private Random random = new Random();
+    
+    // 顯示增幅選單
+    private void showPowerUpMenu() {
+        String[] randomPowerUps = getRandomPowerUps();
+        String chosenPowerUp = (String) JOptionPane.showInputDialog(
+            frame,
+            "選擇一個增幅效果:",
+            "增幅選擇",
+            JOptionPane.QUESTION_MESSAGE,
+            null,
+            randomPowerUps,
+            randomPowerUps[0]
+        );
+    
+        if (chosenPowerUp != null) {
+            applyPowerUp(chosenPowerUp);
+        }
+    }
+    
+    // 隨機挑選3個增幅選項
+    private String[] getRandomPowerUps() {
+        String[] selectedPowerUps = new String[3];
+        int[] indexes = random.ints(0, powerUps.length).distinct().limit(3).toArray();
+        for (int i = 0; i < 3; i++) {
+            selectedPowerUps[i] = powerUps[indexes[i]];
+        }
+        return selectedPowerUps;
+    }
+    
+    // 應用選擇的增幅效果
+    private void applyPowerUp(String powerUp) {
+        switch (powerUp) {
+            case "血量的10%加到攻擊力":
+                int bonusAttack = (int) (heroHealth * 0.1);
+                heroAttackPower += bonusAttack;
+                break;
+            case "吸血10%":
+                isDefenseActive = false;
+                break;
+            case "攻擊有機會使怪物中毒 (每秒少2%)":
+                poisonActive = true;
+                activatePoisonEffect();
+                break;
+            case "增加50%爆擊機率":
+                criticalHitActive = true;
+                break;
+        }
+        updateLabels();
+    }
+    
+    // 啟動毒傷效果
+    private void activatePoisonEffect() {
+        poisonTimer = new Timer(1000, e -> {
+            if (poisonActive && monsterHealth > 0) {
+                int poisonDamage = (int) (monsterHealth * 0.02);
+                monsterHealth -= poisonDamage;
+                updateLabels();
+            }
+        });
+        poisonTimer.start();
+    }
+    
 
     // 隨機生成魔法卡
     private void generateMagicCards() {
