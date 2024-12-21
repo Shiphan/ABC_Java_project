@@ -422,7 +422,8 @@ public class AnimatedGame {
                 heroAttackPower += bonusAttack;
                 break;
             case "吸血10%":
-                isDefenseActive = false;
+                
+                /////////////////////////////////////////////待新增
                 break;
             case "攻擊有機會使怪物中毒 (每秒少2%)":
                 poisonActive = true;
